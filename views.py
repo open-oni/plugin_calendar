@@ -12,7 +12,7 @@ def all_issues_calendar(request, year=None):
     page_title = "Browse All Issues"
     page_name = "issues"
     crumbs = list(settings.BASE_CRUMBS)
-    issue_calendar = IssueCalendar(None, year)
+    calendar = IssueCalendar(None, year)
     return render(request, 'all_issues_calendar.html', locals())
 
 @cache_page(settings.DEFAULT_TTL_SECONDS)
@@ -21,5 +21,5 @@ def title_issues_calendar(request, lccn, year=None):
     page_title = "Browse Issues: %s" % title.display_name
     page_name = "issues_title"
     crumbs = create_crumbs(title)
-    issue_calendar = IssueCalendar(title, year)
+    calendar = IssueCalendar(title, year)
     return render(request, 'title_issues_calendar.html', locals())

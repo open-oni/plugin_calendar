@@ -1,32 +1,63 @@
 {% load static from staticfiles %}
-{% load cal %}
 
 <div class="year-calendar">
   <div class="row">
     {% for month in calendar.months %}
+
+    {# rows contain four months each #}
+    {% if month.num == 1 or month.num == 5 or month.num == 9 %}
+    <div class="row">
+    {% endif %}
+
     <div class="col-md-3">
       <table class="month table table-condensed table-bordered">
-        <caption>{% month_name month.num %}</caption>
+        <caption><h3>{{month.name}}</h3></caption>
 
         <tr>
-          <th scope="col" abbr="Sunday">Sun</th>
-          <th scope="col" abbr="Monday">Mon</th>
-          <th scope="col" abbr="Tuesday">Tue</th>
-          <th scope="col" abbr="Wednesday">Wed</th>
-          <th scope="col" abbr="Thursday">Thu</th>
-          <th scope="col" abbr="Friday">Fri</th>
-          <th scope="col" abbr="Saturday">Sat</th>
+          <th scope="col" abbr="Sunday">Su</th>
+          <th scope="col" abbr="Monday">Mo</th>
+          <th scope="col" abbr="Tuesday">Tu</th>
+          <th scope="col" abbr="Wednesday">We</th>
+          <th scope="col" abbr="Thursday">Th</th>
+          <th scope="col" abbr="Friday">Fr</th>
+          <th scope="col" abbr="Saturday">Sa</th>
         </tr>
 
         {% for week in month.weeks %}
         <tr>
-          <td>
-          {{week}}
-          </td>
+          {% for day in week.days %}
+            {% if day.day_of_month > 0 %}
+              {% if day.issue_count < 1 %}
+                <td class="noissues">
+                  {{day.day_of_month}}
+                </td>
+              {% elif day.issue_count == 1 %}
+                <td class="single">
+                  <a href="">
+                    {{day.day_of_month}}
+                  </a>
+                </td>
+              {% else %}
+                <td class="multiple">
+                  <a href="">
+                    {{day.day_of_month}}*
+                  </a>
+                </td>
+              {% endif %}
+            {% else %}
+              <td class="noday"></td>
+            {% endif %}
+          {% endfor %}
         </tr>
         {% endfor %}
       </table>
     </div>
+
+    {# Close the row after the fourth month in each case #}
+    {% if month.num == 4 or month.num == 8 or month.num == 12 %}
+    </div><!-- row -->
+    {% endif %}
+
     {% endfor %}
   </div>
 </div>

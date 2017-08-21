@@ -1,6 +1,5 @@
 {% extends "__l_main.html" %}
 {% load static from staticfiles %}
-{% load cal %}
 
 {% block head_page_css %}
   {{ block.super }}
@@ -28,7 +27,7 @@
 
 <div id="std_box">
   {% include "year_select_form.html" %}
-  {% year_calendar issue_calendar %}
+  {% include "year_calendar.html" %}
 </div><!-- end id:std_box -->
 
 {% endblock subcontent %}

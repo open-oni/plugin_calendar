@@ -6,17 +6,48 @@ from django.db.models import Count
 
 from core import models
 
+class Day(object):
+    def __init__(self, week, daydata):
+        self.week = week
+        self.day_of_month = daydata[0]
+        self.day_of_week = daydata[1]
+        self.month = self.week.month.num
+        self.year = self.week.month.cal.year
+        self.dtstr = "%04d%02d%02d" % (self.year, self.month, self.day_of_month)
+        self.issue_count = 0
+
+        if self.dtstr in self.week.month.cal.date_counts:
+            self.issue_count = self.week.month.cal.date_counts[self.dtstr]
+
+        if self.issue_count is None:
+            self.issue_count = 0
+
+class Week(object):
+    def __init__(self, month, weekdata):
+        self.month = month
+        self.weekdata = weekdata
+        self._setup_days()
+
+    def _setup_days(self):
+        self.days = []
+        for daydata in self.weekdata:
+            self.days.append(Day(self, daydata))
+
 class Month(object):
     def __init__(self, cal, num):
         self.cal = cal
         self.num = num
+        self._setup_weeks()
 
-    def weeks(self):
-        weeks = self.cal.monthdays2calendar(self.cal.year, self.num)
-        while len(weeks) < 6:
-            # add blank weeks so all calendars are 6 weeks long.
-            weeks.append([(0, 0)] * 7)
-        return weeks
+    def name(self):
+        return calendar.month_name[self.num]
+
+    def _setup_weeks(self):
+        self.weeks = []
+        raw_weeks = self.cal.monthdays2calendar(self.cal.year, self.num)
+
+        for weekdata in raw_weeks:
+            self.weeks.append(Week(self, weekdata))
 
 class IssueCalendar(calendar.Calendar):
     def __init__(self, title, year):
@@ -59,7 +90,8 @@ class IssueCalendar(calendar.Calendar):
             qs = qs.filter(title_id = self.title.lccn)
         qs = qs.annotate(num_issues = Count("date_issued", distinct = True))
         for issue in qs.all():
-            self.date_counts[issue.date_issued] = issue.num_issues
+            dtstr = "%04d%02d%02d" % (issue.date_issued.year, issue.date_issued.month, issue.date_issued.day)
+            self.date_counts[dtstr] = issue.num_issues
 
     def _setup_months(self):
         self.months = []
@@ -74,75 +106,3 @@ class IssueCalendar(calendar.Calendar):
             )
 
         return SelectYearForm()
-
-    def formatday(self, year, month, day, weekday):
-        """
-        Return a day as a table cell.
-        """
-        if day == 0:
-            return '<td class="noday">&nbsp;</td>'  # day outside month
-        else:
-            r = self.issues.filter(date_issued=datetime.date(year, month, day))
-            issues = set()
-            for issue in r:
-                issues.add((issue.title.lccn,
-                            issue.date_issued, 
-                            issue.edition,
-                            issue.title
-                            ))
-            issues = sorted(list(issues))
-            count = len(issues)
-            if count == 1:
-                _class = "single"
-                lccn, date_issued, edition, title = issues[0]
-                kw = dict(lccn=lccn, date=date_issued, edition=edition)
-                url = urlresolvers.reverse('openoni_issue_pages', kwargs=kw)
-                if self.all_issues:
-                    # list the title(s) being linked since this view is for all papers
-                    _day = """<div class='btn-group'><a class='btn dropdown-toggle' 
-                        data-toggle='dropdown' href='#'>
-                        """
-                    _day += """%s<span class='caret'></span></a>""" % day
-                    _day += "<ul class='dropdown-menu'>"
-                    _day += """<li><a href="%s">%s</a></li>""" % (url, title)
-                    _day += "</ul></div>"
-                else:
-                    # if specific paper, 
-                    _day = """<a href="%s">%s</a>""" % (url, day)
-            elif count > 1:
-                _class = "multiple"
-                # use a dropdown instead of expanding the calendar to display multiple titles
-                _day = """<div class='btn-group'><a class='btn dropdown-toggle' 
-                    data-toggle='dropdown' href='#'>
-                    """
-                _day += """%s<span class='caret'></span></a>""" % day
-                _day += "<ul class='dropdown-menu'>"
-                for lccn, date_issued, edition, title in issues:
-                    kw = dict(lccn=lccn, date=date_issued, edition=edition)
-                    url = urlresolvers.reverse('openoni_issue_pages',
-                                               kwargs=kw)
-                    if self.all_issues:
-                        _day += """<li><a href="%s">%s</a></li>""" % (url, title)
-                    else:
-                        _day += """<li><a href="%s">ed-%d</a></li>""" % (url, edition)
-                _day += "</ul></div>"
-            else:
-                _class = "noissues"
-                _day = day
-            return '<td class="%s %s">%s</td>' % (_class,
-                                                  self.cssclasses[weekday],
-                                                  _day)
-
-    def formatweek(self, year, month, theweek):
-        """
-        Return a complete week as a table row.
-        """
-        s = ''.join(self.formatday(year, month, d, wd) for (d, wd) in theweek)
-        return '<tr>%s</tr>' % s
-
-    def formatweekday(self, day):
-        """
-        Return a weekday name as a table header.
-        """
-        return '<td class="dayname %s">%s</td>' % (self.cssclasses[day],
-                                                   calendar.day_abbr[day][0])
