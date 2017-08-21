@@ -1,0 +1,24 @@
+.calendar .month {
+  display: inline-block;
+  margin: 0 10px 0 0px;
+  text-align: center;
+  vertical-align: top;
+}
+
+.issues-single, .issues-multiple {
+  padding:5px;
+  border: 1px solid #ddd;
+}
+
+.issues-single, .year-calendar .month .single {
+  background-color: #e6e8df; 
+}
+
+.issues-multiple, .year-calendar .month .multiple {
+  background-color: #c6c7c1;
+}
+
+.year-calendar .month .single a, .year-calendar .month .multiple a {
+  font-weight: bold;
+  font-size: 1.1em;
+}
