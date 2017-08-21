@@ -1,3 +1,6 @@
+import calendar
+import datetime
+
 from django.conf import settings
 from django.shortcuts import get_object_or_404, render
 
@@ -23,3 +26,24 @@ def title_issues_calendar(request, lccn, year=None):
     crumbs = create_crumbs(title)
     calendar = IssueCalendar(title, year)
     return render(request, 'title_issues_calendar.html', locals())
+
+@cache_page(settings.DEFAULT_TTL_SECONDS)
+def issues_for_date(request, lccn, year, month, day):
+    m, d, y = int(month), int(day), int(year)
+    page_title = "Issues published on %s %d, %d" % (calendar.month_name[m], d, y)
+    dt = datetime.date(y, m, d)
+    page_name = "issues_for_date"
+
+    if lccn == "all":
+        issues = models.Issue.objects.filter(date_issued = dt)
+
+    else:
+        title = get_object_or_404(models.Title, lccn=lccn)
+        issues = models.Issue.objects.filter(date_issued = dt, title_id = lccn)
+        if len(issues) > 1:
+            page_title = title.name + ": " + page_title
+        else:
+            # TODO: Redirect!
+            page_title="Redirect me!"
+
+    return render(request, 'issues_for_date.html', locals())

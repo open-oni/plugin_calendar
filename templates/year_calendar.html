@@ -33,13 +33,13 @@
                 </td>
               {% elif day.issue_count == 1 %}
                 <td class="single">
-                  <a href="">
+                  <a href="{{day.link}}">
                     {{day.day_of_month}}
                   </a>
                 </td>
               {% else %}
                 <td class="multiple">
-                  <a href="">
+                  <a href="{{day.link}}">
                     {{day.day_of_month}}*
                   </a>
                 </td>

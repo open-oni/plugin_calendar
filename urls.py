@@ -15,4 +15,8 @@ urlpatterns = [
     # Override core's title-specific calendar for a user-specified year
     url(r'^lccn/(?P<lccn>\w+)/issues/(?P<year>\d{4})$',
        views.title_issues_calendar, name="calendar_title_issues_calendar_for_year"),
+
+    # New issue list for a given date
+    url(r'^issues/(?P<lccn>\w+)/(?P<year>\d{4})-(?P<month>\d{2})-(?P<day>\d{2})/$',
+        views.issues_for_date, name="calendar_issues_for_date"),
 ]

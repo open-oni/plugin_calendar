@@ -1,0 +1,14 @@
+{% extends "__l_main.html" %}
+{% load static from staticfiles %}
+
+{% block subcontent %}
+
+<div id="std_box">
+  <ul>
+    {% for issue in issues %}
+      {{issue}}
+    {% endfor %}
+  </ul>
+</div><!-- end id:std_box -->
+
+{% endblock subcontent %}

@@ -1,6 +1,7 @@
 import calendar
 
 from django import forms
+from django.core import urlresolvers
 from django.db import connection
 from django.db.models import Count
 
@@ -21,6 +22,18 @@ class Day(object):
 
         if self.issue_count is None:
             self.issue_count = 0
+
+    def link(self):
+        lccn = "all"
+        if self.week.month.cal.title is not None:
+            lccn = self.week.month.cal.title.lccn
+
+        return urlresolvers.reverse('calendar_issues_for_date', kwargs=dict(
+            lccn = lccn,
+            year = "%04d" % self.year,
+            month = "%02d" % self.month,
+            day = "%02d" % self.day_of_month,
+        ))
 
 class Week(object):
     def __init__(self, month, weekdata):
