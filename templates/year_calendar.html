@@ -1,0 +1,32 @@
+{% load static from staticfiles %}
+{% load cal %}
+
+<div class="year-calendar">
+  <div class="row">
+    {% for month in calendar.months %}
+    <div class="col-md-3">
+      <table class="month table table-condensed table-bordered">
+        <caption>{% month_name month.num %}</caption>
+
+        <tr>
+          <th scope="col" abbr="Sunday">Sun</th>
+          <th scope="col" abbr="Monday">Mon</th>
+          <th scope="col" abbr="Tuesday">Tue</th>
+          <th scope="col" abbr="Wednesday">Wed</th>
+          <th scope="col" abbr="Thursday">Thu</th>
+          <th scope="col" abbr="Friday">Fri</th>
+          <th scope="col" abbr="Saturday">Sat</th>
+        </tr>
+
+        {% for week in month.weeks %}
+        <tr>
+          <td>
+          {{week}}
+          </td>
+        </tr>
+        {% endfor %}
+      </table>
+    </div>
+    {% endfor %}
+  </div>
+</div>

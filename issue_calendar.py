@@ -6,10 +6,19 @@ from django.db.models import Count
 
 from core import models
 
-class IssueCalendar(calendar.Calendar):
-    # CSS classes for the day <td>s
-    cssclasses = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"]
+class Month(object):
+    def __init__(self, cal, num):
+        self.cal = cal
+        self.num = num
 
+    def weeks(self):
+        weeks = self.cal.monthdays2calendar(self.cal.year, self.num)
+        while len(weeks) < 6:
+            # add blank weeks so all calendars are 6 weeks long.
+            weeks.append([(0, 0)] * 7)
+        return weeks
+
+class IssueCalendar(calendar.Calendar):
     def __init__(self, title, year):
         calendar.Calendar.__init__(self, 6)
         self.title = title
@@ -17,6 +26,7 @@ class IssueCalendar(calendar.Calendar):
         self._get_issue_years()
         self._normalize_selected_year()
         self._get_issue_dates_for_selected_year()
+        self._setup_months()
 
     def _get_issue_years(self):
         """Set up an array of years and issue counts for each year"""
@@ -50,6 +60,11 @@ class IssueCalendar(calendar.Calendar):
         qs = qs.annotate(num_issues = Count("date_issued", distinct = True))
         for issue in qs.all():
             self.date_counts[issue.date_issued] = issue.num_issues
+
+    def _setup_months(self):
+        self.months = []
+        for m in range(12):
+            self.months.append(Month(self, m+1))
 
     def year_form(self):
         class SelectYearForm(forms.Form):
@@ -131,64 +146,3 @@ class IssueCalendar(calendar.Calendar):
         """
         return '<td class="dayname %s">%s</td>' % (self.cssclasses[day],
                                                    calendar.day_abbr[day][0])
-
-    def formatweekheader(self):
-        """
-        Return a header for a week as a table row.
-        """
-        s = ''.join(self.formatweekday(i) for i in self.iterweekdays())
-        return '<tr class="daynames">%s</tr>' % s
-
-    def formatmonthname(self, theyear, themonth, withyear=True):
-        """
-        Return a month name as a table row.
-        """
-        if withyear:
-            s = '%s %s' % (calendar.month_name[themonth], theyear)
-        else:
-            s = '%s' % calendar.month_name[themonth]
-        return '<tr><td colspan="7" class="title">%s, %s</td></tr>' % (s,
-                                                                       theyear)
-
-    def formatmonth(self, theyear, themonth, withyear=True):
-        """
-        Return a formatted month as a table.
-        """
-        v = []
-        a = v.append
-        a('<table border="0" cellpadding="0" cellspacing="0" class="month table table-condensed table-bordered">')
-        a('\n')
-        a(self.formatmonthname(theyear, themonth, withyear=withyear))
-        a('\n')
-        a(self.formatweekheader())
-        a('\n')
-        weeks = self.monthdays2calendar(theyear, themonth)
-        while len(weeks) < 6:
-            # add blank weeks so all calendars are 6 weeks long.
-            weeks.append([(0, 0)] * 7)
-        for week in weeks:
-            a(self.formatweek(theyear, themonth, week))
-            a('\n')
-        a('</table>')
-        a('\n')
-        return ''.join(v)
-
-    def formatyear(self, theyear, width=4):
-        """
-        Return a formatted year as a div of tables.
-        """
-        v = []
-        a = v.append
-        width = max(width, 1)
-        a('<div cellspacing="0" class="calendar_wrapper">')
-        for i in range(calendar.January, calendar.January + 12, width):
-            # months in this row
-            months = range(i, min(i + width, 13))
-            a('<div class="calendar_row">')
-            for m in months:
-                a('<div class="span3 calendar_month">')
-                a(self.formatmonth(theyear, m, withyear=False))
-                a('</div>')
-            a('</div>')
-        a('</div>')
-        return ''.join(v)

@@ -1,5 +1,6 @@
 {% extends "__l_newspaper.html" %}
 {% load static from staticfiles %}
+{% load cal %}
 
 {% block head_page_css %}
   {{ block.super }}
@@ -28,4 +29,5 @@
 {% endblock extra_nav %}
 
 {% block newspaper_content %}
+  {% year_calendar issue_calendar %}
 {% endblock newspaper_content %}
