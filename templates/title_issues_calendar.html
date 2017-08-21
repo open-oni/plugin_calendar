@@ -1,0 +1,39 @@
+<!-- Calendar view for individual titles:
+        http://BASE_URL/lccn/sn83045350/issues/  -->
+
+{% extends "__l_newspaper.html" %}
+{% load static from staticfiles %}
+
+{% block head_page_css %}
+    {{ block.super }}
+
+    <link href="{% static 'css/calendar.css' %}" rel="stylesheet" media="screen">
+{% endblock head_page_css %}
+
+{% block head_item_metadata %}
+    {% include "includes/lc_metadata.html" %}
+{% endblock head_item_metadata %}
+
+{% block javascript %}
+{{ block.super }}
+<script type="text/javascript">
+  var jumpYearLoc = '{% url 'calendar_title_issues_calendar_for_year' title.lccn 9999 %}';
+  jQuery(function($){
+    $("#jump-year").click(function(){
+      var newloc = jumpYearLoc.replace("9999", $("#id_year").val());
+      window.location = newloc;
+    });
+  });
+</script>
+{% endblock %}
+
+{% block subcontent %}
+
+<div id="std_box">
+  {% include "year_select_form.html" %}
+
+  <!-- calendar -->
+
+</div><!-- end id:std_box -->
+
+{% endblock %}
