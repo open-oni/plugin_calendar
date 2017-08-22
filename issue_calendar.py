@@ -101,10 +101,11 @@ class IssueCalendar(calendar.Calendar):
         qs = models.Issue.objects.filter(date_issued__year = self.year)
         if self.title is not None:
             qs = qs.filter(title_id = self.title.lccn)
-        qs = qs.annotate(num_issues = Count("date_issued", distinct = True))
         for issue in qs.all():
             dtstr = "%04d%02d%02d" % (issue.date_issued.year, issue.date_issued.month, issue.date_issued.day)
-            self.date_counts[dtstr] = issue.num_issues
+            if dtstr not in self.date_counts:
+                self.date_counts[dtstr] = 0
+            self.date_counts[dtstr] += 1
 
     def _setup_months(self):
         self.months = []
