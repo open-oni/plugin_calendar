@@ -10,7 +10,7 @@
   border: 1px solid #ddd;
 }
 
-.issues-multiple, .year-calendar .month .multiple {
+.issues-single, .year-calendar .month .single, .issues-multiple, .year-calendar .month .multiple {
   background-color: #e6e8df;
 }
 
