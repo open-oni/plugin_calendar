@@ -5,10 +5,10 @@ and templates for finding content for a given date.
 
 ## Setup
 
-The setup for this plugin is slightly involved, but bear with us!
+Clone the repository into your site's plugins directory:
 
 ```
-git clone git@github.com:open-oni/plugin_featured_content.git onisite/plugins/featured_content
+git clone git@github.com:open-oni/plugin_calendar.git onisite/plugins/calendar
 ```
 
 Add it to your `INSTALLED_APPS` in `onisite/settings_local.py`.  It should be
