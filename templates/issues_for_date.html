@@ -4,6 +4,9 @@
 {% block subcontent %}
 
 <div id="std_box">
+  {% if not issues %}
+    <p>No issues found</p>
+  {% else %}
   <ul>
     {% for issue in issues %}
     <li>
@@ -16,6 +19,7 @@
     </li>
     {% endfor %}
   </ul>
+  {% endif %}
 </div><!-- end id:std_box -->
 
 {% endblock subcontent %}
