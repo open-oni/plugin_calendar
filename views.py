@@ -46,4 +46,5 @@ def issues_for_date(request, lccn, year, month, day):
             # TODO: Redirect!
             page_title="Redirect me!"
 
+    dtstr = "%04d-%02d-%02d" % (y, m, d)
     return render(request, 'issues_for_date.html', locals())

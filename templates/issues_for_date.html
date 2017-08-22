@@ -6,7 +6,14 @@
 <div id="std_box">
   <ul>
     {% for issue in issues %}
-      {{issue}}
+    <li>
+      <a href="{% url 'openoni_page' issue.title.lccn dtstr issue.edition 1 %}">
+        {% if not title %}
+        {{issue.title.name}} -
+        {% endif %}
+        {{issue.date_issued|date:'Y-m-d'}}{% if issue.edition > 1 %}, ed. {{issue.edition}}{% endif %}
+      </a>
+    </li>
     {% endfor %}
   </ul>
 </div><!-- end id:std_box -->
