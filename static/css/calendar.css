@@ -19,3 +19,7 @@
   text-decoration: underline;
   font-weight: bold;
 }
+
+table.month td, table.month th {
+  text-align: center;
+}
