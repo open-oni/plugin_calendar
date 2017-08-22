@@ -115,7 +115,7 @@ class IssueCalendar(calendar.Calendar):
     def year_form(self):
         class SelectYearForm(forms.Form):
             year = forms.fields.ChoiceField(
-                choices=((yd[0], "%d (%d)" % (yd[0], yd[1])) for yd in self.yeardata),
+                choices=((yd[0], yd[0]) for yd in self.yeardata),
                 initial=self.year
             )
 
