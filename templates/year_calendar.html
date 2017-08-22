@@ -14,13 +14,13 @@
         <caption><h3>{{month.name}}</h3></caption>
 
         <tr>
-          <th scope="col" abbr="Sunday">Su</th>
-          <th scope="col" abbr="Monday">Mo</th>
-          <th scope="col" abbr="Tuesday">Tu</th>
-          <th scope="col" abbr="Wednesday">We</th>
-          <th scope="col" abbr="Thursday">Th</th>
-          <th scope="col" abbr="Friday">Fr</th>
-          <th scope="col" abbr="Saturday">Sa</th>
+          <th scope="col">S<span class="sr-only">unday</span></th>
+          <th scope="col">M<span class="sr-only">unday</span></th>
+          <th scope="col">T<span class="sr-only">uesday</span></th>
+          <th scope="col">W<span class="sr-only">ednesday</span></th>
+          <th scope="col">T<span class="sr-only">hursday</span></th>
+          <th scope="col">F<span class="sr-only">riday</span></th>
+          <th scope="col">S<span class="sr-only">aturday</span></th>
         </tr>
 
         {% for week in month.weeks %}
