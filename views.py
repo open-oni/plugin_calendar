@@ -2,7 +2,7 @@ import calendar
 import datetime
 
 from django.conf import settings
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, render, redirect
 
 from core import models
 from core.decorator import cache_page
@@ -30,9 +30,11 @@ def title_issues_calendar(request, lccn, year=None):
 @cache_page(settings.DEFAULT_TTL_SECONDS)
 def issues_for_date(request, lccn, year, month, day):
     m, d, y = int(month), int(day), int(year)
-    page_title = "Issues published on %s %d, %d" % (calendar.month_name[m], d, y)
+    datestring = "%s %d, %d" % (calendar.month_name[m], d, y)
+    page_title = "Issues published on %s" % datestring
     dt = datetime.date(y, m, d)
     page_name = "issues_for_date"
+    dtstr = "%04d-%02d-%02d" % (y, m, d)
 
     if lccn == "all":
         issues = models.Issue.objects.filter(date_issued = dt)
@@ -40,11 +42,12 @@ def issues_for_date(request, lccn, year, month, day):
     else:
         title = get_object_or_404(models.Title, lccn=lccn)
         issues = models.Issue.objects.filter(date_issued = dt, title_id = lccn)
-        if len(issues) > 1:
-            page_title = title.name + ": " + page_title
-        else:
-            # TODO: Redirect!
-            page_title="Redirect me!"
+        page_title = title.name + ": " + page_title
 
-    dtstr = "%04d-%02d-%02d" % (y, m, d)
+        # For a single issue on a specific title, we just redirect the user to
+        # the page in our newspaper viewer
+        if len(issues) == 1:
+            issue = issues[0]
+            return redirect("openoni_page", issue.title.lccn, dtstr, issue.edition, 1)
+
     return render(request, 'issues_for_date.html', locals())
