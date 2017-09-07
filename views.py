@@ -45,9 +45,9 @@ def issues_for_date(request, lccn, year, month, day):
         page_title = title.name + ": " + page_title
 
         # For a single issue on a specific title, we just redirect the user to
-        # the page in our newspaper viewer
+        # the issue in our newspaper viewer
         if len(issues) == 1:
             issue = issues[0]
-            return redirect("openoni_page", issue.title.lccn, dtstr, issue.edition, 1)
+            return redirect("openoni_issue_pages", issue.title.lccn, dtstr, issue.edition)
 
     return render(request, 'issues_for_date.html', locals())
