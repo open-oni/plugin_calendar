@@ -10,11 +10,14 @@ from core.utils.utils import create_crumbs
 
 from issue_calendar import IssueCalendar
 
+from onisite.plugins.calendar import config
+
 @cache_page(settings.DEFAULT_TTL_SECONDS)
 def all_issues_calendar(request, year=None):
     page_title = "Browse All Issues"
     page_name = "issues"
     crumbs = list(settings.BASE_CRUMBS)
+    display_multiple = config.MULTIPLES_ALL_ISSUES
     calendar = IssueCalendar(None, year)
     return render(request, 'all_issues_calendar.html', locals())
 
@@ -23,6 +26,8 @@ def title_issues_calendar(request, lccn, year=None):
     title = get_object_or_404(models.Title, lccn=lccn)
     page_title = "Browse Issues: %s" % title.display_name
     page_name = "issues_title"
+    # always display where a single title has multiple issues on a day
+    display_multiple = True
     crumbs = create_crumbs(title)
     calendar = IssueCalendar(title, year)
     return render(request, 'title_issues_calendar.html', locals())
