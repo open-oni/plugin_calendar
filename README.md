@@ -40,3 +40,16 @@ you would do this:
 If you choose not to override the core URLs, you will have to change your theme
 to point to the calendar URLs manually, which is not recommended.  Core
 generates URLs for calendar pages in quite a few locations.
+
+Copy `config_example.py` to `config.py`. You may configure whether multiple issues
+on the same day will be identifiable on the calendar with multiple titles. Calendars
+which only display a single title always note where multiple issues were published
+on the same day.
+
+By default, multiples are not distinguished on the calendar with all titles.
+
+```
+# Display where multiple issues occur each day for all issues
+# (multiple issues always show up on calendars for a single title)
+MULTIPLES_ALL_ISSUES = True
+```

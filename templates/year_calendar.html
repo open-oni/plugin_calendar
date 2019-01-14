@@ -31,7 +31,7 @@
                 <td class="noissues">
                   {{day.day_of_month}}
                 </td>
-              {% elif day.issue_count == 1 or not calendar.title %}
+              {% elif day.issue_count == 1 or not display_multiple %}
                 <td class="single">
                   <a href="{{day.link}}">
                     {{day.day_of_month}}
