@@ -10,7 +10,7 @@
   <ul>
     {% for issue in issues %}
     <li>
-      <a href="{% url 'openoni_page' issue.title.lccn dtstr issue.edition 1 %}">
+      <a href="{% url 'openoni_issue_pages' issue.title.lccn dtstr issue.edition %}">
         {% if not title %}
         {{issue.title.name}} -
         {% endif %}
