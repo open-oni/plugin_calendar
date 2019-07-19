@@ -11,16 +11,15 @@
 {% endblock head_item_metadata %}
 
 {% block javascript %}
-{{ block.super }}
-<script type="text/javascript">
-  var jumpYearLoc = '{% url 'calendar_all_issues_calendar_for_year' 9999 %}';
-  jQuery(function($){
-    $("#jump-year").click(function(){
-      var newloc = jumpYearLoc.replace("9999", $("#id_year").val());
-      window.location = newloc;
+  {{ block.super }}
+  <script>
+    var jumpYearLoc = "{% url 'calendar_all_issues_calendar_for_year' 9999 %}";
+    $(function() {
+      $("#jump-year").click(function() {
+        window.location = jumpYearLoc.replace("9999", $("#id_year").val());
+      });
     });
-  });
-</script>
+  </script>
 {% endblock %}
 
 {% block subcontent %}
