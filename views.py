@@ -8,7 +8,7 @@ from core import models
 from core.decorator import cache_page
 from core.utils.utils import create_crumbs
 
-from issue_calendar import IssueCalendar
+from .issue_calendar import IssueCalendar
 
 from onisite.plugins.calendar import config
 

@@ -3,6 +3,20 @@
 This plugin overrides the built-in calendar with a more accessible set of URLs
 and templates for finding content for a given date.
 
+## Compatibility
+
+The "master" branch should not be considered stable.  Unlike the core Open ONI
+repository, plugins don't warrant the extra overhead of having separate
+development branches, release branches, etc.  Instead, it is best to find a tag
+that works and stick with that tag.
+
+- Calendar v0.3.0 and prior only work with Python 2 and Django 1.11 and prior
+  - Therefore these versions of the Calendar plugin are only compatible up to
+    (and including) ONI v0.11.0
+- Calendar releases beyond v0.3.0 may require Python 3 and Django 2.2, though a
+  plugin release cycle has not yet been decided.  If you need this plugin to
+  work with ONI v0.11.0 or prior, stick with v0.3.0 for now.
+
 ## Setup
 
 Clone the repository into your site's plugins directory:
