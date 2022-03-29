@@ -42,12 +42,12 @@ you would do this:
 
 ```
   # Override the core all-issues calendars:
-  url(r'', include("onisite.plugins.calendar.urls")),
+  re_path(r'', include("onisite.plugins.calendar.urls")),
 
   # ...
 
   # make sure you include your calendar links above the core urls
-  url('', include("core.urls")),
+  path('', include("core.urls")),
 ```
 
 If you choose not to override the core URLs, you will have to change your theme
